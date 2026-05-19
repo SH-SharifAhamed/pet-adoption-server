@@ -34,9 +34,15 @@ async function run() {
      try {
           await client.connect();
 
-
           const database = client.db("petAdoption");
           const petCollection = database.collection("pets");
+
+
+          app.get('/pets', async (req, res) => {
+               const result = await petCollection.find().toArray();
+               res.json(result)
+          })
+
 
           app.post('/pets', async (req, res) => {
                const petData = req.body;
@@ -51,7 +57,6 @@ async function run() {
           await client.db("admin").command({ ping: 1 });
           console.log("Pinged your deployment. You successfully connected to MongoDB!");
      } finally {
-          // Ensures that the client will close when you finish/error
           // await client.close();
      }
 }
