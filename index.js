@@ -59,7 +59,19 @@ async function run() {
                res.json(result)
           })
 
+          // pet name edite api create
+          app.patch('/pets/:id', async (req, res) => {
+               const {id} = req.params
+               const updatedData = req.body;
 
+               console.log(updatedData);
+
+               const result = await petCollection.updateOne(
+                    {_id: new ObjectId(id)},
+                    {$set: updatedData}
+               )
+               res.json(result)
+          })
 
           await client.db("admin").command({ ping: 1 });
           console.log("Pinged your deployment. You successfully connected to MongoDB!");
