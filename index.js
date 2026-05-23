@@ -51,14 +51,14 @@ async function run() {
           })
 
           app.get('/pets/:id', async (req, res) => {
-               const { id } = req.params
+               const { id } = req.params;
                const result = await petCollection.findOne({ _id: new ObjectId(id) });
                res.json(result)
           })
 
           // pet name edite api create
           app.patch('/pets/:id', async (req, res) => {
-               const { id } = req.params
+               const { id } = req.params;
                const updatedData = req.body;
 
                const result = await petCollection.updateOne(
@@ -68,16 +68,28 @@ async function run() {
                res.json(result)
           })
 
+          // pet delete 
+          app.delete('/pets/:id', async (req, res) => {
+               const { id } = req.params;
+               const result = await petCollection.deleteOne({ _id: new ObjectId(id) });
+               res.json(result)
+          })
 
 
+
+
+
+
+
+          
+          
+          
           // adopters data
           app.post("/adopters", async (req, res) => {
                const adopterData = req.body;
                const result = await adopterCollection.insertOne(adopterData);
                res.json(result);
           });
-
-
 
           await client.db("admin").command({ ping: 1 });
           console.log("Pinged your deployment. You successfully connected to MongoDB!");
