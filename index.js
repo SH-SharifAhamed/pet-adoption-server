@@ -32,46 +32,52 @@ const client = new MongoClient(uri, {
 
 async function run() {
      try {
-          await client.connect();
+          // await client.connect();
 
           const database = client.db("petAdoption");
           const petCollection = database.collection("pets");
-
+          const adopterCollection = database.collection("adopters");
 
           app.get('/pets', async (req, res) => {
                const result = await petCollection.find().toArray();
                res.json(result)
           })
 
-
+          // pet data added to db
           app.post('/pets', async (req, res) => {
                const petData = req.body;
-               console.log(petData);
-               
                const result = await petCollection.insertOne(petData)
-
                res.json(result)
           })
 
           app.get('/pets/:id', async (req, res) => {
-               const {id} = req.params
-               const result = await petCollection.findOne({_id: new ObjectId(id)});
+               const { id } = req.params
+               const result = await petCollection.findOne({ _id: new ObjectId(id) });
                res.json(result)
           })
 
           // pet name edite api create
           app.patch('/pets/:id', async (req, res) => {
-               const {id} = req.params
+               const { id } = req.params
                const updatedData = req.body;
 
-               console.log(updatedData);
-
                const result = await petCollection.updateOne(
-                    {_id: new ObjectId(id)},
-                    {$set: updatedData}
+                    { _id: new ObjectId(id) },
+                    { $set: updatedData }
                )
                res.json(result)
           })
+
+
+
+          // adopters data
+          app.post("/adopters", async (req, res) => {
+               const adopterData = req.body;
+               const result = await adopterCollection.insertOne(adopterData);
+               res.json(result);
+          });
+
+
 
           await client.db("admin").command({ ping: 1 });
           console.log("Pinged your deployment. You successfully connected to MongoDB!");
