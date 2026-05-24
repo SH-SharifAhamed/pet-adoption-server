@@ -11,7 +11,7 @@ const { log } = require("node:console");
 dotenv.config();
 
 const uri = process.env.MONGODB_URI;
-
+// app.express.json();
 
 
 const app = express()
@@ -75,16 +75,36 @@ async function run() {
                res.json(result)
           })
 
+          // searching get data
+          app.get('/pets', async (req, res) => {
+               if (search) {
+                    pets = await petCollection.find({
+                         title: {
+                              $regex: search,
+                              $options: "i"
+                         },
+                    })
+               }
+          })
 
 
 
 
+          // my listings api create
+          app.get('/adopters/:dataId', async (req, res) => {
+               const { dataId } = req.params;
+               console.log(dataId);
+               
+               const result = await adopterCollection.find({ dataId: dataId }).toArray();
 
-
+               console.log(result);
+               res.json(result)
+          })
           
           
           
-          // adopters data
+          
+          // adopters/Boking data
           app.post("/adopters", async (req, res) => {
                const adopterData = req.body;
                const result = await adopterCollection.insertOne(adopterData);
